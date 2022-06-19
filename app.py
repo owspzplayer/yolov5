@@ -3,7 +3,9 @@ import pyodbc
 from flask import Flask, request, redirect, url_for
 from werkzeug import datastructures
 from werkzeug.utils import secure_filename
-
+import cv2
+import detectout
+from detectout import detecto
 server = 'owspz' 
 database = 'master' 
 username = 'sa' 
@@ -31,7 +33,11 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], 
                                    filename))
-            return bookinfo('192890')
+            img =cv2.imread('D://_test//temp'+'//'+filename)
+            a=detecto(img)
+            
+
+            return str(a)
     return '''
     <!doctype html>
     <title>Upload new File</title>

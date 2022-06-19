@@ -27,9 +27,9 @@ from utils.augmentations import Albumentations, augment_hsv, copy_paste, letterb
  
  
  
-weights=ROOT / 'yolov5s.pt'  # 权重文件地址   .pt文件
+weights=ROOT / 'best.pt'  # 权重文件地址   .pt文件
 source=ROOT / 'data/images'  # 测试数据文件(图片或视频)的保存路径
-data=ROOT / 'data/coco128.yaml'  # 标签文件地址   .yaml文件
+data=ROOT / 'books-8/data.yaml'  # 标签文件地址   .yaml文件
  
 imgsz=(640, 640)  # 输入图片的大小 默认640(pixels)
 conf_thres=0.25  # object置信度阈值 默认0.25  用在nms中
@@ -58,14 +58,11 @@ half &= (pt or jit or onnx or engine) and device.type != 'cpu'  # FP16 supported
 if pt or jit:
     model.model.half() if half else model.model.float()
  
-def start_machine():
-    dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
-    model = DetectMultiBackend(weights, device=device, dnn=dnn, data=data, fp16=half)
-
 def detecto(img):
     # Dataloader
     # 载入数据
-    
+    dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
+    model = DetectMultiBackend(weights, device=device, dnn=dnn, data=data, fp16=half)
     # Run inference
     # 开始预测
     

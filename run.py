@@ -6,4 +6,4 @@ img = cv2.imread(path)
 
 a=detecto(img)
 print("*****************")
-print(a)
+print(a[0]['class'])
