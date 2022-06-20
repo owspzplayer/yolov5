@@ -36,17 +36,17 @@ def upload_file():
             img =cv2.imread('D://_test//temp'+'//'+filename)
             a=detecto(img)
             
-
             return str(a)
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
+    if request.method == 'GET':
+        return '''
+        <!doctype html>
+        <title>Upload new File</title>
+        <h1>Upload new File</h1>
+        <form action="" method=post enctype=multipart/form-data>
+        <p><input type=file name=file>
+             <input type=submit value=Upload>
+        </form>
+        '''
 
 from flask import send_from_directory
 
