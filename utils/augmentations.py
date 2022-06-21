@@ -30,7 +30,7 @@ class Albumentations:
                 A.RandomRotate90(p=0.6),#90度旋轉
                 A.RandomGamma(p=0.0),#隨機伽玛
                 A.Perspective(scale=(0.05, 0.1),p=0.5),#透視
-                A.Rotate(p=0.6),#旋轉 
+                A.Rotate(p=0.6),#旋轉
                 A.ImageCompression(quality_lower=75, p=0.1)]  # transforms 減少圖像的 Jpeg、WebP 壓縮
             self.transform = A.Compose(T, bbox_params=A.BboxParams(format='yolo', label_fields=['class_labels']))
 

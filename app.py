@@ -35,8 +35,10 @@ def upload_file():
                                    filename))
             img =cv2.imread('D://_test//temp'+'//'+filename)
             a=detecto(img)
-            
-            return str(a)
+            cursor.execute("SELECT * from books where lognum like '"+a[0]['class']+"' FOR JSON AUTO")
+            row = cursor.fetchone() 
+      
+            return row[0]
     if request.method == 'GET':
         return '''
         <!doctype html>
@@ -59,9 +61,9 @@ def getimage(filename):
 
 @app.route('/bookinfo/<mid>')
 def bookinfo(mid):
-    cursor.execute("SELECT * from books where mid = "+mid+" FOR JSON AUTO")
+    cursor.execute("SELECT * from books where mid like '"+str(mid)+"' FOR JSON AUTO")
     row = cursor.fetchone() 
-    cursor.execute("update books set readtimes +=1 where mid="+mid)
+    #cursor.execute("update books set readtimes +=1 where mid="+mid)
     return str(row[0])
 
 @app.route('/booksearch/<keyword>')
