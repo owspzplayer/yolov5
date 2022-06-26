@@ -29,16 +29,15 @@ from utils.augmentations import Albumentations, augment_hsv, copy_paste, letterb
  
 weights=ROOT / 'best.pt'  # 权重文件地址   .pt文件
 source=ROOT / 'data/images'  # 测试数据文件(图片或视频)的保存路径
-data=ROOT / 'books-8/data.yaml'  # 标签文件地址   .yaml文件
- 
+data=ROOT / 'books/data.yaml'  # 标签文件地址   .yaml文件
 imgsz=(640, 640)  # 输入图片的大小 默认640(pixels)
-conf_thres=0.25  # object置信度阈值 默认0.25  用在nms中
+conf_thres=0.20  # object置信度阈值 默认0.25  用在nms中
 iou_thres=0.45  # 做nms的iou阈值 默认0.45   用在nms中
-max_det=1000  # 每张图片最多的目标数量  用在nms中
-device='cpu'  # 设置代码执行的设备 cuda device, i.e. 0 or 0,1,2,3 or cpu
+max_det=3  # 每张图片最多的目标数量  用在nms中
+device='0'  # 设置代码执行的设备 cuda device, i.e. 0 or 0,1,2,3 or cpu
 classes=None  # 在nms中是否是只保留某些特定的类 默认是None 就是所有类只要满足条件都可以保留 --class 0, or --class 0 2 3
 agnostic_nms=False  # 进行nms是否也除去不同类别之间的框 默认False
-augment=True  # 预测是否也要采用数据增强 TTA 默认False
+augment=False  # 预测是否也要采用数据增强 TTA 默认False
 visualize=False  # 特征图可视化 默认FALSE
 half=False  # 是否使用半精度 Float16 推理 可以缩短推理时间 但是默认是False
 dnn=False  # 使用OpenCV DNN进行ONNX推理

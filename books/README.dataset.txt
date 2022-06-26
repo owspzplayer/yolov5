@@ -1,7 +1,6 @@
-# undefined > fix-2
-https://public.roboflow.ai/object-detection/undefined
+# books > 2022-08-01 2:17pm
+https://universe.roboflow.com/object-detection/books-ul2pd
 
-Provided by undefined
+Provided by Roboflow
 License: CC BY 4.0
 
-undefined
