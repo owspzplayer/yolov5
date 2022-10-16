@@ -122,11 +122,15 @@ def bookinfo_users(randcode,mid):
         row = cursor.fetchone()
     return str(row[0])
     
+@app.route('/booksearchlen/<keyword>')
+def bookserechlen(keyword):
+    cursor.execute("select count(*) from BookData where bookname like '%"+ str(keyword)+"%' FOR JSON AUTO")
+    row = cursor.fetchone()
+    return str(row[0])
 
 @app.route('/booksearch/<keyword>')
 def bookserech(keyword):
     cursor.execute("select bookname from BookData where bookname like '%"+ str(keyword)+"%' FOR JSON AUTO")
-    row = cursor.fetchone() 
     s=''
     while 1:
         row = cursor.fetchone()
