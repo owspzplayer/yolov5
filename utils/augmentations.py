@@ -32,6 +32,7 @@ class Albumentations:
                 A.Perspective(scale=(0.05, 0.1),p=0.5),#透視
                 A.Rotate(p=0.6),#旋轉
                 A.ImageCompression(quality_lower=75, p=0.1)]  # transforms 減少圖像的 Jpeg、WebP 壓縮
+                A.RGBShift(p=0.5)#隨機輸入 RGB 圖像的每個通道的值。
             self.transform = A.Compose(T, bbox_params=A.BboxParams(format='yolo', label_fields=['class_labels']))
 
             LOGGER.info(colorstr('albumentations: ') + ', '.join(f'{x}' for x in self.transform.transforms if x.p))
