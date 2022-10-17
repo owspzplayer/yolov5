@@ -124,20 +124,22 @@ def bookinfo_users(randcode,mid):
     
 @app.route('/booksearchlen/<keyword>')
 def bookserechlen(keyword):
-    cursor.execute("select count(*) from BookData where bookname like '%"+ str(keyword)+"%' FOR JSON AUTO")
+    cursor.execute("select count(*) from BookData where bookname like '%"+ str(keyword)+"%' ")
     row = cursor.fetchone()
-    return str(row[0])
+    a=int(row[0])
+    a=(a//10)
+    return str(a)
 
-@app.route('/booksearch/<keyword>')
-def bookserech(keyword):
-    cursor.execute("select bookname from BookData where bookname like '%"+ str(keyword)+"%' FOR JSON AUTO")
+@app.route('/booksearch/<keyword>/<page>')
+def bookserech(keyword,page):
+    cursor.execute("select * from(select ROW_NUMBER() over(order by mid) as rowid,*from BookData where bookname like '%"+str(keyword)+"%')as g where rowid between "+str((int(page)*10)-9)+" and "+str(int(page)*10)+" for json auto")
     s=''
     while 1:
         row = cursor.fetchone()
         if not row:
             break
         s+=row[0]
-    return str(row[0])
+    return str(s)
 
 @app.route('/foreignlanguage/')
 def foreignlanguaged():
