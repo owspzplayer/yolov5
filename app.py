@@ -124,15 +124,53 @@ def bookinfo_users(randcode,mid):
     
 @app.route('/booksearchlen/<keyword>')
 def bookserechlen(keyword):
-    cursor.execute("select count(*) from BookData where bookname like '%"+ str(keyword)+"%' ")
+    words=keyword.split(' ')
+    search=''
+    for i,j in enumerate(words):
+        search+="bookname like '%"+str(j)+"%' "
+        if i!=len(words)-1:
+            search +=" and "
+    cursor.execute("select count(*) from BookData where "+str(search)+"")
     row = cursor.fetchone()
     a=int(row[0])
-    a=(a//10)
+    a=(a//10)+1
     return str(a)
 
 @app.route('/booksearch/<keyword>/<page>')
 def bookserech(keyword,page):
-    cursor.execute("select * from(select ROW_NUMBER() over(order by mid) as rowid,*from BookData where bookname like '%"+str(keyword)+"%')as g where rowid between "+str((int(page)*10)-9)+" and "+str(int(page)*10)+" for json auto")
+    words=keyword.split(' ')
+    search=''
+    for i,j in enumerate(words):
+        search+="bookname like '%"+str(j)+"%' "
+        if i!=len(words)-1:
+            search +=" and "
+    cursor.execute("select * from(select ROW_NUMBER() over(order by mid) as rowid,*from BookData where "+str(search)+")as g where rowid between "+str((int(page)*10)-9)+" and "+str(int(page)*10)+" for json auto")
+    
+    s=''
+    while 1:
+        row = cursor.fetchone()
+        if not row:
+            break
+        s+=row[0]
+    return str(s)
+
+@app.route('/booksearchusers/<keyword>/<page>/<randcode>')
+def bookserechusers(keyword,page,randcode):
+    cursor.execute("SELECT id from member where randcode like '"+str(randcode)+"'")
+    userid = cursor.fetchone()
+
+    a = filter(str.isalnum, str(userid[0]))
+    users =''.join(list(a))
+
+    words=keyword.split(' ')
+    search=''
+    for i,j in enumerate(words):
+        search+="bookname like '%"+str(j)+"%' "
+        if i!=len(words)-1:
+            search +=" and "
+    print("select * from(select * from(select ROW_NUMBER() over(order by mid) as rowid,*from BookData where "+str(search)+")as g where rowid between "+str((int(page)*10)-9)+" and "+str(int(page)*10)+")as q left join users"+str(users) +" on q.mid = users"+str(users)+".mid")
+    cursor.execute("select * from(select * from(select ROW_NUMBER() over(order by mid) as rowid,*from BookData where "+str(search)+")as g where rowid between "+str((int(page)*10)-9)+" and "+str(int(page)*10)+")as q left join users"+str(users) +" on q.mid = users"+str(users)+".mid for json auto")
+    
     s=''
     while 1:
         row = cursor.fetchone()
@@ -164,7 +202,7 @@ def googlesearch():
 
 @app.route('/newer/')
 def newer():
-    cursor.execute("select top 6 * from BookData order by 識別碼 desc for json auto")
+    cursor.execute("select top 6 * from BookData order by ID desc for json auto")
     s=''
     while 1:
         row = cursor.fetchone()
