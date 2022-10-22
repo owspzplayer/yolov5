@@ -6,35 +6,36 @@ import bs4
 
 
 def blogToCome(a):
-    #博客來 取購買連結 價格 作者 出版社 出版日期 分類 書簡介 
-    #=============================================================================搜尋頁面跟傳送給網站的資訊
-    url = 'https://search.books.com.tw/search/query/key/' + str(a) +'/cat/all'  
-    headers = { 'Referer': 'https://search.books.com.tw/',
-                    'sec-ch-ua-mobile': '?0',
-                    'sec-ch-ua-platform': "Windows",
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-                                'AppleWebKit/537.36 (KHTML, like Gecko)'
-                                'Chrome/103.0.0.0 Safari/537.36',}
-    #=============================================================================取得網頁html所有資訊
-    response = requests.get(url, headers=headers)
-    soup = bs4.BeautifulSoup(response.text, 'lxml')
-    soupstr = str(soup)
-    #print(soupstr)
-    #=============================================================================抱歉，找不到您所查詢的的 ISBN書的資訊 error1
-    blogToComeBookerror1 = soupstr.find('抱歉，找不到您所查詢的')
-    if blogToComeBookerror1>=1:
-        #print("博客來無此書存在")
-        blogToComebookinfo={
-            'BtcUrl':'Null',
-            'BtcPrice':'Null',
-            'BtcWriter':'Null',
-            'BtcPress':'Null',
-            'BtcDate':'Null',
-            'BtcClass':'Null',
-            'BtcIntroduction':'Null',
-        }
-        return blogToComebookinfo
     try:
+        #博客來 取購買連結 價格 作者 出版社 出版日期 分類 書簡介 
+        #=============================================================================搜尋頁面跟傳送給網站的資訊
+        url = 'https://search.books.com.tw/search/query/key/' + str(a) +'/cat/all'  
+        headers = { 'Referer': 'https://search.books.com.tw/',
+                        'sec-ch-ua-mobile': '?0',
+                        'sec-ch-ua-platform': "Windows",
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+                                    'AppleWebKit/537.36 (KHTML, like Gecko)'
+                                    'Chrome/103.0.0.0 Safari/537.36',}
+        #=============================================================================取得網頁html所有資訊
+        response = requests.get(url, headers=headers)
+        soup = bs4.BeautifulSoup(response.text, 'lxml')
+        soupstr = str(soup)
+        #print(soupstr)
+        #=============================================================================抱歉，找不到您所查詢的的 ISBN書的資訊 error1
+        blogToComeBookerror1 = soupstr.find('抱歉，找不到您所查詢的')
+        if blogToComeBookerror1>=1:
+            #print("博客來無此書存在")
+            blogToComebookinfo={
+                'BtcUrl':'Null',
+                'BtcPrice':'Null',
+                'BtcWriter':'Null',
+                'BtcPress':'Null',
+                'BtcDate':'Null',
+                'BtcClass':'Null',
+                'BtcIntroduction':'Null',
+            }
+            return blogToComebookinfo
+    
         #=============================================================================尋找特定標籤的內容
         findALLbook = soup.find('div', class_="mod2 table-container")
         findbook = findALLbook.find('div', class_="box")
@@ -138,30 +139,31 @@ def blogToCome(a):
         return blogToComebookinfo
 
 def Pchome(a):
-    #PChome 取購買連結
-    #=============================================================================搜尋頁面跟傳送給網站的資訊 需要利用特殊方式F12>xhr>搜尋欄輸入>RESULT點下去>去找其網址規律性
-    PChomeurl = 'https://ecshweb.pchome.com.tw/search/v3.3/all/results?q='+str(a)+'&page=1&sort=sale/dc'
-    headers = {     'User-Agent': 'https://24h.pchome.com.tw/',
-                    'sec-ch-ua-mobile': '?0',
-                    'sec-ch-ua-platform': "Windows",
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-                                'AppleWebKit/537.36 (KHTML, like Gecko)'
-                                'Chrome/103.0.0.0 Safari/537.36',}
-    #=============================================================================取得搜尋網頁html所有資訊
-    response = requests.get(PChomeurl, headers=headers)
-    soup = bs4.BeautifulSoup(response.text, 'lxml')
-    soupstr = str(soup)
-    #print(soupstr)
-    #=============================================================================抱歉，找不到您所查詢的的 ISBN書的資訊 error1
-    pchomeBookerror1 = soupstr.find('"totalPage":0,')
-    if pchomeBookerror1>=1:
-        #print("PChome無此書存在")
-        Pchomebookinfo={
-            'PchUrl':'Null',
-            'PchPrice':'Null',
-        }
-        return Pchomebookinfo
     try:
+        #PChome 取購買連結
+        #=============================================================================搜尋頁面跟傳送給網站的資訊 需要利用特殊方式F12>xhr>搜尋欄輸入>RESULT點下去>去找其網址規律性
+        PChomeurl = 'https://ecshweb.pchome.com.tw/search/v3.3/all/results?q='+str(a)+'&page=1&sort=sale/dc'
+        headers = {     'User-Agent': 'https://24h.pchome.com.tw/',
+                        'sec-ch-ua-mobile': '?0',
+                        'sec-ch-ua-platform': "Windows",
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+                                    'AppleWebKit/537.36 (KHTML, like Gecko)'
+                                    'Chrome/103.0.0.0 Safari/537.36',}
+        #=============================================================================取得搜尋網頁html所有資訊
+        response = requests.get(PChomeurl, headers=headers)
+        soup = bs4.BeautifulSoup(response.text, 'lxml')
+        soupstr = str(soup)
+        #print(soupstr)
+        #=============================================================================抱歉，找不到您所查詢的的 ISBN書的資訊 error1
+        pchomeBookerror1 = soupstr.find('"totalPage":0,')
+        if pchomeBookerror1>=1:
+            #print("PChome無此書存在")
+            Pchomebookinfo={
+                'PchUrl':'Null',
+                'PchPrice':'Null',
+            }
+            return Pchomebookinfo
+    
         #=============================================================================這所有碼 其裡面就有pchome商品碼跟價格等等 只取商品碼並加上連結網址
         PcHomemidhead = soupstr.find('"Id":"')
         PcHomemidtail = soupstr.find('","cateId"')
@@ -181,45 +183,50 @@ def Pchome(a):
             'PchUrl':PcHomemidurl,
             'PchPrice':PcHomeprice,
         }
-        return Pchomebookinfo
+        if(PcHomemidurl=='https://24h.pchome.com.tw/books/prod/'): #若只有這網址沒產品名也是null
+            Pchomebookinfo={
+               'PchUrl':'Null',
+               'PchPrice':'Null',
+            }
     except:
         #print("PChome無此書存在")
         Pchomebookinfo={
             'PchUrl':'Null',
             'PchPrice':'Null',
         }
-        return Pchomebookinfo
+    return Pchomebookinfo
 
 def TAAZE(a):
-    #TAAZE讀冊生活
-    #=============================================================================搜尋頁面跟傳送給網站的資訊
-    TAAZEurl = 'https://www.taaze.tw/rwd_searchResult.html?keyType%5B%5D=0&keyword%5B%5D='+str(a)+'&prodKind=0&prodCatId=0&catId=0&saleDiscStart=0&saleDiscEnd=0&salePriceStart=&salePriceEnd=&publishDateStart=&publishDateEnd=&prodRank=0&addMarkFlg=0&force=0&catFocus=&orgFocus=&mainCatFocus=&catNmFocus=&catIdFocus=&layout=A&nowPage=1&sort=price'
-    headers = { 'Referer': 'https://www.taaze.tw/',
-                    'sec-ch-ua-mobile': '?0',
-                    'sec-ch-ua-platform': "Windows",
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-                                'AppleWebKit/537.36 (KHTML, like Gecko)'
-                                'Chrome/103.0.0.0 Safari/537.36',}
-    #=============================================================================取得搜尋網頁html的最低價格跟第一個便宜書連結
-    response = requests.get(TAAZEurl, headers=headers)
-    soup = bs4.BeautifulSoup(response.text, 'lxml')
-    souperror=soup
-    soup = soup.find('div', class_="media")
-    soupstr = str(soup)
-    #print(soupstr)
-    #=============================================================================抱歉，找不到您所查詢的的 ISBN書的資訊 error1
-    souperror = souperror.findAll('div', class_="col-xs-12")
-    #print(souperror)
-    errr = "索結果：<!--共<span class='r'>0</span>筆"
-    TAAZEerror1 = str(souperror).find(errr)
-    if TAAZEerror1>=1:
-        #print("TAAZE讀冊生活無此書存在 跑太慢")
-        TAAZEbookinfo={
-            'TaazeUrl':'Null',
-            'TaazePrice':'Null',
-        }
-        return TAAZEbookinfo
     try:
+        #TAAZE讀冊生活
+        #=============================================================================搜尋頁面跟傳送給網站的資訊
+        TAAZEurl = 'https://www.taaze.tw/rwd_searchResult.html?keyType%5B%5D=0&keyword%5B%5D='+str(a)+'&prodKind=0&prodCatId=0&catId=0&saleDiscStart=0&saleDiscEnd=0&salePriceStart=&salePriceEnd=&publishDateStart=&publishDateEnd=&prodRank=0&addMarkFlg=0&force=0&catFocus=&orgFocus=&mainCatFocus=&catNmFocus=&catIdFocus=&layout=A&nowPage=1&sort=price'
+        headers = { 'Referer': 'https://www.taaze.tw/',
+                        'sec-ch-ua-mobile': '?0',
+                        'sec-ch-ua-platform': "Windows",
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+                                    'AppleWebKit/537.36 (KHTML, like Gecko)'
+                                    'Chrome/103.0.0.0 Safari/537.36',}
+        #=============================================================================取得搜尋網頁html的最低價格跟第一個便宜書連結
+        response = requests.get(TAAZEurl, headers=headers)
+        soup = bs4.BeautifulSoup(response.text, 'lxml')
+        souperror=soup
+        soup = soup.find('div', class_="media")
+        soupstr = str(soup)
+        #print(soupstr)
+        #=============================================================================抱歉，找不到您所查詢的的 ISBN書的資訊 error1
+        souperror = souperror.findAll('div', class_="col-xs-12")
+        #print(souperror)
+        errr = "索結果：<!--共<span class='r'>0</span>筆"
+        TAAZEerror1 = str(souperror).find(errr)
+        if TAAZEerror1>=1:
+            #print("TAAZE讀冊生活無此書存在 跑太慢")
+            TAAZEbookinfo={
+                'TaazeUrl':'Null',
+                'TaazePrice':'Null',
+            }
+            return TAAZEbookinfo
+    
         #=============================================================================取連結
         Taazeurlhead = soupstr.find('href')
         Taazeurltail = soupstr.find('" onclick="historyStatByListView')
@@ -247,6 +254,11 @@ def TAAZE(a):
             'TaazeUrl':'Null',
             'TaazePrice':'Null',
         }
+        if(TAAZEbookinfo=="'TaazeUrl':''"):
+            TAAZEbookinfo={
+                'TaazeUrl':'Null',
+                'TaazePrice':'Null',
+            }
         return TAAZEbookinfo
 
 def ISBNimport(a):
@@ -260,7 +272,4 @@ def ISBNimport(a):
 #print("請輸入ISBN:")
 #ISBNimport(a = input())
 #a=9789861755465
-#print(ISBNimport(9789861755465))
-
-
-
+#ISBNimport(9575501594) 

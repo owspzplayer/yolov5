@@ -1,9 +1,7 @@
 import cv2
-import detectout
-from detectout import detecto
-path = 'C://Users//asus4//Source//Repos//yolov5-owspz//data//images//zidane.jpg'
-img = cv2.imread(path)
+from detectout import run
+path = r"C:\Users\asus4\source\repos\yolov5-owspz\runs\detect\exp30\中式米食丙級必勝精選.jpg"
+#img = cv2.imread(path)
 
-a=detecto(img)
-print("*****************")
-print(a[0]['class'])
+a=run(weights='best.pt',source=path)
+print(a[0])

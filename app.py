@@ -6,8 +6,9 @@ from flask import Flask, request, redirect, url_for
 from werkzeug import datastructures
 from werkzeug.utils import secure_filename
 import cv2
+from flask import send_from_directory
 #import detectout
-from detectout import detecto
+from detectout import run
 import findbook as fb
 server = 'owspz' 
 database = 'master' 
@@ -34,15 +35,43 @@ def upload_file():
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], 
-                                   filename))
-            img =cv2.imread('D://_test//temp'+'//'+filename)
-            a=detecto(img)
+            file.save(r"D:/_test/temp/"+file.filename)
+            x=r"D:/_test/temp/"+file.filename
+
+            a=run(weights='best.pt',source=x)
             if not a:
                 return 'notfoundbook'
-            cursor.execute("SELECT * from BookData where lognum like '%"+a[0]['class']+"%' FOR JSON AUTO")
+            cursor.execute("SELECT * from BookData where lognum like '%"+a[0]+"%' FOR JSON AUTO")
             row = cursor.fetchone() 
+            if not row:
+                return 'notfoundbook'
             return row[0]
+    if request.method == 'GET':
+        return '''
+        <!doctype html>
+        <title>Upload new File</title>
+        <h1>Upload new File</h1>
+        <form action="" method=post enctype=multipart/form-data>
+        <p><input type=file name=file>
+             <input type=submit value=Upload>
+        </form>
+        '''
+@app.route('/postimagev7/', methods=['GET', 'POST'])
+def upload_filev7():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+            IMAGE_FILE = ''.join(app.config['UPLOAD_FOLDER'], filename)
+            a=yolov7dectcout(IMAGE_FILE)
+            if not a:
+                return 'notfoundbook'
+            #cursor.execute("SELECT * from BookData where lognum like '%"+a[0]['class']+"%' FOR JSON AUTO")
+            #row = cursor.fetchone() 
+            #if not row:
+                #return 'notfoundbook'
+            return str(a)
     if request.method == 'GET':
         return '''
         <!doctype html>
@@ -64,10 +93,33 @@ def upload_file2():
                                    filename))
             img =cv2.imread('D://_test//temp'+'//'+filename)
             a=detecto(img)
-            cursor.execute("SELECT * from BookData where lognum like '%"+a[0]['class']+"%' FOR JSON AUTO")
-            row = cursor.fetchone() 
-      
-            return row[0]
+            if not a:
+                return 'notfoundbook'
+            #return str(a)+str(len(a))
+            x=len(a)
+            q = " lognum like '%"
+            for i in range(x):
+                if a == 1:
+                    q=str(a[i]['class'])
+                    cursor.execute("SELECT * from BookData where lognum like '%"+str(a[0]['class'])+"%' FOR JSON AUTO")
+                    row = cursor.fetchone() 
+                    return row[0]
+                q = q + str(a[i]['class'])+"%'"
+                if i==x-1:
+                    print("SELECT * from BookData where "+q+" FOR JSON AUTO")
+                    cursor.execute("SELECT * from BookData where "+q+" FOR JSON AUTO")
+                    s=''
+                    while 1:
+                        row = cursor.fetchone()
+                        print(str(row))
+                        if not row:
+                            break
+                        s+=row[0]
+                    return str(s)
+                else:
+                    q+=" or lognum like '%"
+            
+            
     if request.method == 'GET':
         return '''
         <!doctype html>
@@ -78,7 +130,7 @@ def upload_file2():
              <input type=submit value=Upload>
         </form>
         '''
-from flask import send_from_directory
+
 
 @app.route('/bookimage/<filename>')
 def getimage(filename):
@@ -100,7 +152,7 @@ def bookinfo(mid):
     ISBN = str(ISBNs[0]).split('、')
     print(ISBN[0])
     a=str(fb.ISBNimport(ISBN[0]))
-
+    print(a)
     return a
 
 @app.route('/bookinfousers/<randcode>/<mid>')
@@ -202,7 +254,7 @@ def googlesearch():
 
 @app.route('/newer/')
 def newer():
-    cursor.execute("select top 6 * from BookData order by ID desc for json auto")
+    cursor.execute("select top 6 * from BookData order by mid desc for json auto")
     s=''
     while 1:
         row = cursor.fetchone()
